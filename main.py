@@ -1,6 +1,7 @@
 import discord
 import os
 import random
+import json
 
 intents = discord.Intents.default()
 intents.members = True
@@ -52,5 +53,6 @@ async def on_message(message):
         print(f"SYS | Dm sent: {rand_dm}")
 
 
-TOKEN = 'MTA1MzEzOTAxNzAzNTY5NDIxMA.GfbYB5.UbTCRVEq8l1ysGxvJjl_GWOwPnm5DWamXFE2Ms'
+f = open('secret.json')
+TOKEN = json.load(f)['TOKEN']
 client.run(TOKEN)

@@ -1,2 +1,2 @@
 .gitignore
-secret.json
+./secret.json

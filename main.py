@@ -80,6 +80,6 @@ async def on_message(message):
 
 
 if __name__ == '__main__':
-    f = open('secret.json')
-    TOKEN = json.load(f)['TOKEN']
-    client.run(TOKEN)
+    # f = open('secret.json')
+    # TOKEN = json.load(f)['TOKEN']
+    client.run("MTA1MzEzOTAxNzAzNTY5NDIxMA.GfbYB5.UbTCRVEq8l1ysGxvJjl_GWOwPnm5DWamXFE2Ms")

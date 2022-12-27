@@ -1,6 +1,4 @@
 import discord
-import os
-import random
 import json
 from googletrans import Translator
 
@@ -22,8 +20,10 @@ def detectLang(text):
     # known bug
     if text.lower() == 'ik':
         return 'en'
+  
 
     translator = Translator()
+    
     detection = translator.detect(text)
     lang = 'en'
     if detection.confidence >= 0.8:
@@ -44,6 +44,7 @@ async def send_dm(author_id, msg):
     await user.send(msg)
 
 
+
 @client.event
 async def on_message(message):
     print(f"{message.author.name}: {message.content}")
@@ -54,29 +55,28 @@ async def on_message(message):
         await message.channel.send('PoNg!')
     elif message.content.startswith('$bing'):
         await message.channel.send('chilling')
-    elif message.content.startswith('$tr'):
+    
+
+    
+    # TRANSLATION
+    if message.content.startswith('$tr'):
         if message.content.startswith('$tr_'):
             try:
                 destLang = message.content[4:6]
+                
                 if destLang == 'zh':
                     destLang = 'zh-CN'  # Default to Simplified chinese
                 await message.channel.send(translate(message.content[6:], dest=destLang))
             except ValueError:
                 await message.channel.send("Invalid translation request")
+                
         else:
             await message.channel.send(translate(message.content[3:]))
     elif detectLang(message.content) not in ['en', 'fr']:
-        # elif detectLang(message.content) in ['ru', 'zh-CN', 'zh-TW']:
         translation = translate(message.content, dest='en')
         print(f"SYS | Translated from {detectLang(message.content)}")
         await message.channel.send(f'Translation: {translation}')
 
-    if "allez les bleu" in message.content.lower() or "la coupe" in message.content.lower():
-        dms = ["I wish you step on lego in the middle of the night", "I hope your pillow is hot on both sides",
-               "I wish you stub your toe on concrete", "You are a disappointment"]
-        rand_dm = random.choice(dms)
-        await send_dm(message.author.id, rand_dm)
-        print(f"SYS | Dm sent: {rand_dm}")
 
 
 if __name__ == '__main__':

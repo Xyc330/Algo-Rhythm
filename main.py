@@ -64,6 +64,7 @@ async def on_message(message):
     elif detectLang(message.content) != 'en':
         # elif detectLang(message.content) in ['ru', 'zh-CN', 'zh-TW']:
         translation = translate(message.content, dest='en')
+        print(f"SYS | Translated from {detectLang(message.content)}")
         await message.channel.send(f'Translation: {translation}')
 
     if "allez les bleu" in message.content.lower() or "la coupe" in message.content.lower():

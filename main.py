@@ -19,10 +19,14 @@ def translate(text, dest='ru'):
 
 
 def detectLang(text):
+    # known bug
+    if text.lower() == 'ik':
+        return 'en'
+
     translator = Translator()
     detection = translator.detect(text)
     lang = 'en'
-    if(detection.confidence >= 0.8):
+    if detection.confidence >= 0.8:
         lang = detection.lang
 
     return lang
@@ -35,15 +39,15 @@ async def on_ready():
     print('SYS | I\'m in')
 
 
-async def send_dm(id, msg):
-    user = await client.fetch_user(id)
+async def send_dm(author_id, msg):
+    user = await client.fetch_user(author_id)
     await user.send(msg)
 
 
 @client.event
 async def on_message(message):
     print(f"{message.author.name}: {message.content}")
-    if message.author == client.user:
+    if message.author == client.user or message.author.id in [704802632660943089, 298822483060981760]:
         return
 
     if message.content.startswith('$ping'):
@@ -61,7 +65,7 @@ async def on_message(message):
                 await message.channel.send("Invalid translation request")
         else:
             await message.channel.send(translate(message.content[3:]))
-    elif detectLang(message.content) != 'en':
+    elif detectLang(message.content) not in ['en', 'fr']:
         # elif detectLang(message.content) in ['ru', 'zh-CN', 'zh-TW']:
         translation = translate(message.content, dest='en')
         print(f"SYS | Translated from {detectLang(message.content)}")

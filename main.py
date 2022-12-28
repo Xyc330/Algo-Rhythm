@@ -1,6 +1,9 @@
 import discord
 import json
 from googletrans import Translator
+import wikipedia
+
+
 
 intents = discord.Intents.default()
 intents.members = True
@@ -30,6 +33,20 @@ def detectLang(text):
         lang = detection.lang
 
     return lang
+
+
+# WIKIPEDIA WHO IS
+def who_is(query):
+    try:
+        return wikipedia.summary(query)
+    except Exception:
+        for new_query in wikipedia.search(query):
+            try:
+                return wikipedia.summary(new_query)
+            except Exception:
+                pass
+    return "I don't know about "+query
+
 
 
 @client.event
@@ -76,7 +93,13 @@ async def on_message(message):
         translation = translate(message.content, dest='en')
         print(f"SYS | Translated from {detectLang(message.content)}")
         await message.channel.send(f'Translation: {translation}')
-
+        
+    # WIKI WHO IS 
+    if message.content.startswith('$whois'):
+        await message.channel.send("Researching...")
+        summary = who_is(message.content[6:])
+        summary = (summary[:1998] + '..') if len(summary) > 1998 else summary # Max character limit of 2000
+        await message.channel.send(summary)
 
 
 if __name__ == '__main__':

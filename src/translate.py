@@ -9,20 +9,19 @@ def translate(text, dest='ru'):
 
 def detectLang(text):
     # known bugs
-    if text.lower() in ['ik', 'noice']:
+    if text.lower() in ['ik', 'noice', 'bruv']:
         return 'en'
 
     translator = Translator()
 
     detection = translator.detect(text)
     lang = 'en'
+    confidence_threshold = 0.9
     if str(type(detection.confidence)) == '<class \'list\'>':
-        if detection.confidence[0] >= 0.8:
+        if detection.confidence[0] >= confidence_threshold:
             lang = detection.lang
-    elif detection.confidence >= 0.8:
+    elif detection.confidence >= confidence_threshold:
         lang = detection.lang
 
     return lang
 
-
-print(detectLang("*chef's kisS*"))

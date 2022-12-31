@@ -16,7 +16,13 @@ def detectLang(text):
 
     detection = translator.detect(text)
     lang = 'en'
-    if detection.confidence >= 0.8:
+    if str(type(detection.confidence)) == '<class \'list\'>':
+        if detection.confidence[0] >= 0.8:
+            lang = detection.lang
+    elif detection.confidence >= 0.8:
         lang = detection.lang
 
     return lang
+
+
+print(detectLang("*chef's kisS*"))

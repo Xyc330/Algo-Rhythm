@@ -2,7 +2,7 @@ import discord
 import json
 from wiki import *
 from translate import *
-
+from ice_breaker import *
 
 intents = discord.Intents.default()
 intents.members = True
@@ -62,10 +62,16 @@ async def on_message(message):
         translation = translate(message.content, dest='en')
         print(f"SYS | Translated from {detectLang(message.content)}")
         await message.channel.send(f'Translation: {translation}')
-        
+
+
+    # HOT TAKE
+    if message.content == "$hottake":
+        await message.channel.send(get_random_hot_take())
+    elif message.content == "$icebreaker":
+        await message.channel.send(get_random_ice_breaker())
 
 
 if __name__ == '__main__':
-    f = open('secret.json')
+    f = open('/Users/yichengxia/Desktop/Programs/Python/Algo-rhythm/secret.json')
     TOKEN = json.load(f)['TOKEN']
     client.run(TOKEN)

@@ -28,9 +28,11 @@ async def send_dm(author_id, msg):
 
 @client.event
 async def on_message(message):
-    print(f"{message.author.name}: {message.content}")
-    if message.author == client.user or message.author.id in [704802632660943089, 298822483060981760]:
+
+    if message.author == client.user or message.author.bot:
         return
+    
+    print(f"{message.author.name}: {message.content}")
 
     if message.content.startswith('$ping'):
         await message.channel.send('PoNg!')
@@ -38,7 +40,7 @@ async def on_message(message):
         await message.channel.send('chilling')
 
     # WIKI WHO IS
-    if message.content.startswith('$whois'):
+    elif message.content.startswith('$whois'):
         await message.channel.send("Researching...")
         summary = who_is(message.content[6:])
         summary = (summary[:1998] + '..') if len(summary) > 1998 else summary  # Max character limit of 2000
@@ -65,7 +67,7 @@ async def on_message(message):
 
 
     # HOT TAKE
-    if message.content == "$hottake":
+    elif message.content == "$hottake":
         await message.channel.send(get_random_hot_take())
     elif message.content == "$icebreaker":
         await message.channel.send(get_random_ice_breaker())

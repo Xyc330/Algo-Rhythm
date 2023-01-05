@@ -3,7 +3,7 @@ import json
 from wiki import *
 from translate import *
 from ice_breaker import *
-
+from encryption import *
 intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True
@@ -26,6 +26,21 @@ async def send_dm(author_id, msg):
 
 
 
+async def check_encryption(message):
+          
+    # ENCRYPTION
+    if message.content.startswith('$set_key'):
+        key = message.content[9:]
+        set_key(key)
+        
+        await message.channel.send("Key set!")
+    
+    
+    return ""
+        
+        
+    
+
 @client.event
 async def on_message(message):
 
@@ -33,6 +48,11 @@ async def on_message(message):
         return
     
     print(f"{message.author.name}: {message.content}")
+
+    enc = await check_encryption(message)
+    if enc != "":
+        await message.channel.send(enc)
+
 
     if message.content.startswith('$ping'):
         await message.channel.send('PoNg!')
@@ -71,6 +91,9 @@ async def on_message(message):
         await message.channel.send(get_random_hot_take())
     elif message.content == "$icebreaker":
         await message.channel.send(get_random_ice_breaker())
+        
+
+        
 
 
 if __name__ == '__main__':

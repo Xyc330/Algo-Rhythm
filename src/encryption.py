@@ -1,7 +1,7 @@
 import base64
 import json
 
-def encrypt(key, msg):
+def encrypt(msg, key):
     enc = []
     for i in range(len(msg)):
         key_c = key[i % len(key)]
@@ -22,6 +22,14 @@ def decrypt(msg, key):
     return "".join(dec)
 
 
+
+def get_key():
+    with open("encryption.json", "r") as enc_json:
+        data = json.load(enc_json)
+
+        return data["key"]
+
+    
 def set_key(key):
     with open("encryption.json", "r+") as enc_json:
         data = json.load(enc_json)

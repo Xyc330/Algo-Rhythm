@@ -27,14 +27,20 @@ async def send_dm(author_id, msg):
 
 
 async def check_encryption(message):
+    
           
     # ENCRYPTION
     if message.content.startswith('$set_key'):
         key = message.content[9:]
         set_key(key)
-        
-        await message.channel.send("Key set!")
-    
+        return "Key set!"
+    elif message.content.startswith('$enc'):
+        msg = message.content[5:]
+        return encrypt(msg, get_key())
+    elif message.content.startswith('$dec'):
+        msg = message.content[5:]
+        print(msg)
+        return decrypt(msg, get_key())
     
     return ""
         
@@ -51,7 +57,10 @@ async def on_message(message):
 
     enc = await check_encryption(message)
     if enc != "":
+        await message.delete()
         await message.channel.send(enc)
+        return
+        
 
 
     if message.content.startswith('$ping'):

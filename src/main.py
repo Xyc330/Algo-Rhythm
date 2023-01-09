@@ -4,6 +4,8 @@ from wiki import *
 from translate import *
 from ice_breaker import *
 from encryption import *
+from parse_int import parse_int
+
 intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True
@@ -100,7 +102,11 @@ async def on_message(message):
         await message.channel.send(get_random_hot_take())
     elif message.content == "$icebreaker":
         await message.channel.send(get_random_ice_breaker())
-        
+    
+    
+    # PARSEINT
+    elif message.content.startswith("$parseint"):
+        await message.channel.send(parse_int(message.content[10:]))
 
         
 

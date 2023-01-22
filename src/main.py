@@ -1,4 +1,3 @@
-import time
 import discord
 from wiki import *
 from translate import *
@@ -68,8 +67,6 @@ async def on_message(message):
         await message.channel.send(enc)
         return
 
-    if message.content.startswith('$ping'):
-        await message.channel.send('PoNg!')
     elif message.content.startswith('$bing'):
         await message.channel.send('chilling')
 

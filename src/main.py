@@ -1,4 +1,5 @@
 import discord
+import re
 from wiki import *
 from translate import *
 from ice_breaker import *
@@ -24,6 +25,21 @@ async def on_ready():
 async def send_dm(author_id, msg):
     user = await client.fetch_user(author_id)
     await user.send(msg)
+
+
+async def send_msg(channel, msg):
+    parts = []
+    if len(msg) > 2000:  # Split the messages into parts and send
+        while len(msg) > 2000:
+            parts.append(msg[:2000])
+            msg = msg[2000:]
+        parts.append(msg)
+
+        for part in parts:
+            await channel.send(part)
+
+    else:
+        await channel.send(msg)
 
 
 def isHehe(msg):
@@ -64,18 +80,17 @@ async def on_message(message):
     enc = await check_encryption(message)
     if enc != "":
         await message.delete()
-        await message.channel.send(enc)
+        await send_msg(message.channel, enc)
         return
 
     elif message.content.startswith('$bing'):
-        await message.channel.send('chilling')
+        await send_msg(message.channel, 'chilling')
 
     # WIKI WHO IS
     elif message.content.startswith('$whois'):
         await message.channel.send("Researching...")
         summary = who_is(message.content[6:])
-        summary = (summary[:1998] + '..') if len(summary) > 1998 else summary  # Max character limit of 2000
-        await message.channel.send(summary)
+        await send_msg(message.channel, summary)
 
     # TRANSLATION
     elif message.content.startswith('$tr'):
@@ -85,50 +100,39 @@ async def on_message(message):
 
                 if dest_lang == 'zh':
                     dest_lang = 'zh-CN'  # Default to Simplified chinese
-                await message.channel.send(translate(message.content[6:], dest=dest_lang))
+                await send_msg(message.channel, translate(message.content[6:], dest=dest_lang))
             except ValueError:
-                await message.channel.send("Invalid translation request")
+                await send_msg(message.channel, "Invalid translation request")
 
         else:
-            await message.channel.send(translate(message.content[3:]))
+            await send_msg(message.channel, translate(message.content[3:]))
     elif detectLang(message.content) not in ['en', 'fr']:
         translation = translate(message.content, dest='en')
         print(f"SYS | Translated from {detectLang(message.content)}")
-        await message.channel.send(f'Translation: {translation}')
+        await send_msg(message.channel, f'Translation: {translation}')
 
 
     # HOT TAKE
     elif message.content == "$hottake":
-        await message.channel.send(get_random_hot_take())
+        await send_msg(message.channel, get_random_hot_take())
     elif message.content == "$icebreaker":
-        await message.channel.send(get_random_ice_breaker())
+        await send_msg(message.channel, get_random_ice_breaker())
 
 
     # PARSEINT
     elif message.content.startswith("$parseint"):
-        await message.channel.send(parse_int(message.content[10:]))
+        await send_msg(message.channel, parse_int(message.content[10:]))
 
 
     # Hehehe
     elif message.content.lower().startswith("he"):
         if isHehe(message.content):
-            await message.channel.send(message.content + "he")
+            await send_msg(message.channel, message.content + "he")
 
     # Brainfuck translator
     elif message.content.lower().startswith("$bf"):
         code = stringPrinter(message.content[4:])
-        parts = []
-        if len(code) > 2000:  # Split the messages into parts and send
-            while len(code) > 2000:
-                parts.append(code[:2000])
-                code = code[2000:]
-            parts.append(code)
-
-            for part in parts:
-                await message.channel.send(part)
-
-        else:
-            await message.channel.send(code)
+        await send_msg(message.channel, code)
 
 
 

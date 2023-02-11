@@ -1,11 +1,11 @@
 import discord
-import re
+# import re # built-in regex
 from wiki import *
 from translate import *
 from ice_breaker import *
 from encryption import *
 from parse_int import parse_int
-from brainfuck import stringPrinter
+from brainfuck import stringPrinter, evaluate
 
 intents = discord.Intents.default()
 intents.members = True
@@ -92,6 +92,36 @@ async def on_message(message):
         summary = who_is(message.content[6:])
         await send_msg(message.channel, summary)
 
+    
+
+    # HOT TAKE
+    elif message.content == "$hottake":
+        await send_msg(message.channel, get_random_hot_take())
+    elif message.content == "$icebreaker":
+        await send_msg(message.channel, get_random_ice_breaker())
+
+
+    # PARSEINT
+    elif message.content.startswith("$parseint"):
+        await send_msg(message.channel, parse_int(message.content[10:]))
+
+
+    # Hehehe
+    elif message.content.lower().startswith("he"):
+        if isHehe(message.content):
+            await send_msg(message.channel, message.content + "he")
+
+    # Brainfuck
+    elif message.content.lower().startswith("$bf"):
+        code = stringPrinter(message.content[4:])
+        await send_msg(message.channel, code)
+    elif message.content.lower().startswith("$cp_bf"):
+        output = evaluate(message.content[7:])
+        await send_msg(message.channel, output)
+        
+        
+        
+        
     # TRANSLATION
     elif message.content.startswith('$tr'):
         if message.content.startswith('$tr_'):
@@ -111,28 +141,6 @@ async def on_message(message):
         print(f"SYS | Translated from {detectLang(message.content)}")
         await send_msg(message.channel, f'Translation: {translation}')
 
-
-    # HOT TAKE
-    elif message.content == "$hottake":
-        await send_msg(message.channel, get_random_hot_take())
-    elif message.content == "$icebreaker":
-        await send_msg(message.channel, get_random_ice_breaker())
-
-
-    # PARSEINT
-    elif message.content.startswith("$parseint"):
-        await send_msg(message.channel, parse_int(message.content[10:]))
-
-
-    # Hehehe
-    elif message.content.lower().startswith("he"):
-        if isHehe(message.content):
-            await send_msg(message.channel, message.content + "he")
-
-    # Brainfuck translator
-    elif message.content.lower().startswith("$bf"):
-        code = stringPrinter(message.content[4:])
-        await send_msg(message.channel, code)
 
 
 

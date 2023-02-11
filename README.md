@@ -24,3 +24,5 @@ Parses a number from literal text to integer, up to 1 million.<br>
 Example: "One hundred thousand and forty-three" -> 100043 <br>
 - <b><i>$bf</b></i><br>
 Takes text as input and translates it into brainfuck code that prints out the text.
+- <b><i>$cp_bf</b></i><br>
+Takes brainfuck code as input and sends the result, does not support inputs with (,) at the moment.
